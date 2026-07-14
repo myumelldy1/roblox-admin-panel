@@ -218,7 +218,7 @@ table.innerHTML += `
 });
 
 // =====================
-// FORMAT TANGGAL
+// FORMAT TANGGAL WIB UTC+7
 // DD/MM/YY HH:MM:SS
 // =====================
 
@@ -230,6 +230,10 @@ function formatDate(dateString){
 
 
     const date = new Date(dateString);
+
+
+    // Tambah UTC +7 (WIB)
+    date.setHours(date.getHours() + 7);
 
 
     const day =
