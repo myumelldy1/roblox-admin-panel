@@ -4,342 +4,118 @@ let currentPage = 1;
 
 let perPage = 50;
 
-const SUPABASE_URL =
-"https://ygwkmanjkiuachkmhkbh.supabase.co";
+// ===============================
+// SUPABASE CONFIG
+// ===============================
+
+const SUPABASE_URL = "https://ygwkmanjkiuachkmhkbh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
 
 
-const SUPABASE_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
+// ===============================
+// LOAD PLAYER LOG
+// ===============================
+
+async function loadLogs() {
+
+    try {
+
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/player_logs?select=*&order=id.desc`,
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`
+                }
+            }
+        );
 
 
-
-async function login(){
-
-let email =
-document.getElementById("email").value;
+        const logs = await response.json();
 
 
-let password =
-document.getElementById("password").value;
+        console.log(logs);
 
 
-let response =
-await fetch(
-
-SUPABASE_URL+
-"/auth/v1/token?grant_type=password",
-
-{
-
-method:"POST",
-
-headers:{
-
-apikey:SUPABASE_KEY,
-
-"Content-Type":
-"application/json"
-
-},
-
-body:JSON.stringify({
-
-email:email,
-
-password:password
-
-})
-
-}
-
-);
+        const table = document.getElementById("logTable");
 
 
-let data =
-await response.json();
+        table.innerHTML = "";
 
 
+        logs.forEach(log => {
 
-if(data.access_token){
+            const row = `
+                <tr>
+                    <td>${log.id}</td>
+                    <td>${log.username}</td>
+                    <td>${log.userid}</td>
+                    <td>${log.event}</td>
+                    <td>${log.time}</td>
+                </tr>
+            `;
 
-localStorage.setItem(
-"token",
-data.access_token
-);
+
+            table.innerHTML += row;
+
+        });
 
 
-window.location.href =
-"dashboard.html";
+    } catch(error) {
 
+        console.error(
+            "Gagal mengambil data:",
+            error
+        );
 
-}
-
-else{
-
-alert("Login gagal");
+    }
 
 }
 
-}
 
+// ===============================
+// DASHBOARD COUNTER
+// ===============================
 
 async function loadDashboard(){
 
-function showTable(){
+    const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/player_logs?select=*`,
+        {
+            headers:{
+                "apikey": SUPABASE_KEY,
+                "Authorization": `Bearer ${SUPABASE_KEY}`
+            }
+        }
+    );
 
 
-let start =
-(currentPage - 1) * perPage;
+    const data = await response.json();
 
 
-let end =
-start + perPage;
-
-
-let pageData =
-playersData.slice(start,end);
-
-
-
-let html="";
-
-
-pageData.forEach(player=>{
-
-
-html += `
-
-<tr>
-
-<td>
-${player.username}
-</td>
-
-<td>
-${player.userid}
-</td>
-
-<td>
-${player.join_time}
-</td>
-
-<td>
-${player.leave_time ?? "Online"}
-</td>
-
-
-</tr>
-
-`;
-
-});
-
-
-document.getElementById("table")
-.innerHTML = html;
-
-
-
-document.getElementById("page")
-.innerHTML =
-currentPage;
-
-
-}
-
-function nextPage(){
-
-
-if(
-currentPage * perPage < playersData.length
-){
-
-currentPage++;
-
-showTable();
-
-}
+    document.getElementById("totalPlayer").innerHTML =
+        data.length;
 
 
 }
 
 
+// ===============================
+// AUTO RUN
+// ===============================
 
-function previousPage(){
+loadLogs();
+loadDashboard();
 
 
-if(currentPage > 1){
+// refresh setiap 5 detik
 
-currentPage--;
+setInterval(() => {
 
-showTable();
+    loadLogs();
+    loadDashboard();
 
-}
-
-
-}
-
-function searchPlayer(){
-
-
-let keyword =
-document
-.getElementById("search")
-.value
-.toLowerCase();
-
-
-
-let result =
-playersData.filter(player=>
-
-
-player.username
-.toLowerCase()
-.includes(keyword)
-
-||
-
-String(player.userid)
-.includes(keyword)
-
-
-);
-
-
-
-let backup =
-playersData;
-
-
-playersData = result;
-
-currentPage = 1;
-
-
-showTable();
-
-
-playersData = backup;
-
-
-}
-
-let token =
-localStorage.getItem("token");
-
-
-if(!token){
-
-location.href="login.html";
-
-return;
-
-}
-
-
-
-let res =
-await fetch(
-
-SUPABASE_URL+
-"/rest/v1/player_logs?select=*",
-
-{
-
-headers:{
-
-apikey:SUPABASE_KEY,
-
-Authorization:
-"Bearer "+token
-
-}
-
-}
-
-);
-
-
-
-let data =
-await res.json();
-
-
-
-//
-// TOTAL PLAYER
-//
-
-document.getElementById("total")
-.innerHTML =
-data.length;
-
-
-
-//
-// JOIN HARI INI
-//
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-
-
-let todayCount =
-data.filter(player =>
-
-player.join_time
-.startsWith(today)
-
-).length;
-
-
-
-document.getElementById("today")
-.innerHTML =
-todayCount;
-
-
-
-//
-// PLAYER ONLINE
-//
-
-let online =
-data.filter(player =>
-
-player.leave_time == null
-
-).length;
-
-
-
-document.getElementById("online")
-.innerHTML =
-online;
-
-
-
-//
-// TOTAL SESI
-//
-
-document.getElementById("session")
-.innerHTML =
-data.length;
-
-
-
-//
-// TABLE
-//
-
-playersData = data;
-
-showTable();
-
+},5000);
 
 }
