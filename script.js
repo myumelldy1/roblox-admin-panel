@@ -94,6 +94,8 @@ if(!token){
 
 location.href="login.html";
 
+return;
+
 }
 
 
@@ -126,29 +128,105 @@ await res.json();
 
 
 
-document.getElementById(
-"total"
-).innerHTML=data.length;
+//
+// TOTAL PLAYER
+//
+
+document.getElementById("total")
+.innerHTML =
+data.length;
 
 
+
+//
+// JOIN HARI INI
+//
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+
+
+let todayCount =
+data.filter(player =>
+
+player.join_time
+.startsWith(today)
+
+).length;
+
+
+
+document.getElementById("today")
+.innerHTML =
+todayCount;
+
+
+
+//
+// PLAYER ONLINE
+//
+
+let online =
+data.filter(player =>
+
+player.leave_time == null
+
+).length;
+
+
+
+document.getElementById("online")
+.innerHTML =
+online;
+
+
+
+//
+// TOTAL SESI
+//
+
+document.getElementById("session")
+.innerHTML =
+data.length;
+
+
+
+//
+// TABLE
+//
 
 let html="";
 
 
-data.forEach(p=>{
+data.forEach(player=>{
 
 
-html+=`
+html += `
 
 <tr>
 
-<td>${p.username}</td>
+<td>
+${player.username}
+</td>
 
-<td>${p.userid}</td>
 
-<td>${p.join_time}</td>
+<td>
+${player.userid}
+</td>
 
-<td>${p.leave_time ?? "Online"}</td>
+
+<td>
+${player.join_time}
+</td>
+
+
+<td>
+${player.leave_time ?? "Online"}
+</td>
+
 
 </tr>
 
@@ -157,31 +235,10 @@ html+=`
 });
 
 
-document.getElementById(
-"table"
-).innerHTML=html;
 
+document.getElementById("table")
+.innerHTML =
+html;
 
-}
-
-
-
-function logout(){
-
-localStorage.removeItem("token");
-
-location.href="login.html";
-
-}
-
-
-
-if(
-location.pathname.includes(
-"dashboard"
-)
-){
-
-loadDashboard();
 
 }
