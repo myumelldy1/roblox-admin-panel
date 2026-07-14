@@ -1,12 +1,68 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
 
 <title>
-Roblox Dashboard
+Roblox Admin Dashboard
 </title>
+
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+padding:20px;
+}
+
+
+.cards{
+
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+
+}
+
+
+.card{
+
+background:#222;
+padding:20px;
+border-radius:10px;
+width:200px;
+text-align:center;
+
+}
+
+
+table{
+
+width:100%;
+margin-top:30px;
+border-collapse:collapse;
+
+}
+
+
+td,th{
+
+border:1px solid #555;
+padding:10px;
+
+}
+
+
+button{
+
+padding:10px;
+
+}
+
+</style>
+
 
 </head>
 
@@ -24,15 +80,77 @@ Logout
 </button>
 
 
+
+<div class="cards">
+
+
+<div class="card">
+
 <h3>
-Total Player:
-<span id="total">
-0
-</span>
+Total Player
 </h3>
 
+<h2 id="total">
+0
+</h2>
 
-<table border="1">
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Join Hari Ini
+</h3>
+
+<h2 id="today">
+0
+</h2>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Player Online
+</h3>
+
+<h2 id="online">
+0
+</h2>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Total Sesi
+</h3>
+
+<h2 id="session">
+0
+</h2>
+
+</div>
+
+
+</div>
+
+
+
+
+<h2>
+Player Log
+</h2>
+
+
+<table>
+
 
 <thead>
 
@@ -54,12 +172,15 @@ Join
 Leave
 </th>
 
+
 </tr>
 
 </thead>
 
 
+
 <tbody id="table">
+
 
 </tbody>
 
@@ -72,5 +193,6 @@ Leave
 
 
 </body>
+
 
 </html>
