@@ -1,119 +1,47 @@
-let playersData = [];
-
-let currentPage = 1;
-
-let perPage = 50;
-
-// ===============================
-// SUPABASE CONFIG
-// ===============================
-
-const SUPABASE_URL = "https://ygwkmanjkiuachkmhkbh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
+const SUPABASE_URL =
+"https://ygwkmanjkiuachkmhkbh.supabase.co";
 
 
-// ===============================
-// LOAD PLAYER LOG
-// ===============================
-
-async function loadLogs() {
-
-    try {
-
-        const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/player_logs?select=*&order=id.desc`,
-            {
-                method: "GET",
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": `Bearer ${SUPABASE_KEY}`
-                }
-            }
-        );
+const SUPABASE_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
 
 
-        const logs = await response.json();
 
-
-        console.log(logs);
-
-
-        const table = document.getElementById("logTable");
-
-
-        table.innerHTML = "";
-
-
-        logs.forEach(log => {
-
-            const row = `
-                <tr>
-                    <td>${log.id}</td>
-                    <td>${log.username}</td>
-                    <td>${log.userid}</td>
-                    <td>${log.event}</td>
-                    <td>${log.time}</td>
-                </tr>
-            `;
-
-
-            table.innerHTML += row;
-
-        });
-
-
-    } catch(error) {
-
-        console.error(
-            "Gagal mengambil data:",
-            error
-        );
-
-    }
-
-}
-
+// =====================
+// LOGIN
+// =====================
 
 async function login(){
 
-let email =
-document.getElementById("email").value;
+
+let username =
+document.getElementById("username").value;
 
 
 let password =
 document.getElementById("password").value;
 
 
-let response =
-await fetch(
 
-SUPABASE_URL+
-"/auth/v1/token?grant_type=password",
+let response = await fetch(
+
+`${SUPABASE_URL}/rest/v1/admins?username=eq.${username}`,
 
 {
 
-method:"POST",
-
 headers:{
 
-apikey:SUPABASE_KEY,
+"apikey":SUPABASE_KEY,
 
-"Content-Type":
-"application/json"
+"Authorization":
+`Bearer ${SUPABASE_KEY}`
 
-},
-
-body:JSON.stringify({
-
-email:email,
-
-password:password
-
-})
+}
 
 }
 
 );
+
 
 
 let data =
@@ -121,15 +49,27 @@ await response.json();
 
 
 
-if(data.access_token){
+if(data.length === 0){
+
+document.getElementById("message")
+.innerHTML="Admin tidak ditemukan";
+
+return;
+
+}
+
+
+
+if(data[0].password == password){
+
 
 localStorage.setItem(
-"token",
-data.access_token
+"admin",
+username
 );
 
 
-window.location.href =
+window.location.href=
 "dashboard.html";
 
 
@@ -137,55 +77,144 @@ window.location.href =
 
 else{
 
-alert("Login gagal");
 
-}
-
-}
-
-
-// ===============================
-// DASHBOARD COUNTER
-// ===============================
-
-async function loadDashboard(){
-
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/player_logs?select=*`,
-        {
-            headers:{
-                "apikey": SUPABASE_KEY,
-                "Authorization": `Bearer ${SUPABASE_KEY}`
-            }
-        }
-    );
-
-
-    const data = await response.json();
-
-
-    document.getElementById("totalPlayer").innerHTML =
-        data.length;
+document.getElementById("message")
+.innerHTML="Password salah";
 
 
 }
 
 
-// ===============================
-// AUTO RUN
-// ===============================
 
-loadLogs();
-loadDashboard();
+}
 
 
-// refresh setiap 5 detik
 
-setInterval(() => {
+// =====================
+// CEK LOGIN
+// =====================
 
-    loadLogs();
-    loadDashboard();
 
-},5000);
+function checkLogin(){
+
+
+if(!localStorage.getItem("admin")){
+
+
+window.location.href="index.html";
+
+
+}
+
+
+}
+
+
+
+// =====================
+// LOGOUT
+// =====================
+
+
+function logout(){
+
+
+localStorage.removeItem("admin");
+
+
+window.location.href="index.html";
+
+
+}
+
+
+
+
+// =====================
+// AMBIL LOG ROBLOX
+// =====================
+
+
+async function loadLogs(){
+
+
+let response =
+await fetch(
+
+`${SUPABASE_URL}/rest/v1/player_logs?select=*&order=id.desc`,
+
+{
+
+headers:{
+
+"apikey":SUPABASE_KEY,
+
+"Authorization":
+`Bearer ${SUPABASE_KEY}`
+
+}
+
+}
+
+);
+
+
+
+let logs =
+await response.json();
+
+
+
+let table =
+document.getElementById("logTable");
+
+
+
+if(!table) return;
+
+
+
+table.innerHTML="";
+
+
+
+logs.forEach(log=>{
+
+
+table.innerHTML += `
+
+<tr>
+
+<td>${log.id}</td>
+
+<td>${log.username}</td>
+
+<td>${log.userid}</td>
+
+<td>${log.event}</td>
+
+<td>${log.time}</td>
+
+</tr>
+
+`;
+
+
+});
+
+
+
+let counter =
+document.getElementById("totalPlayer");
+
+
+if(counter){
+
+counter.innerHTML =
+logs.length;
+
+}
+
+
 
 }
