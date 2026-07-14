@@ -1,217 +1,180 @@
-const SUPABASE_URL =
-"https://ygwkmanjkiuachkmhkbh.supabase.co";
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
 
 
-const SUPABASE_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
+local SUPABASE_URL =
+"https://ygwkmanjkiuachkmhkbh.supabase.co"
 
 
+local SUPABASE_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw"
 
-// =====================
-// LOGIN SUPABASE AUTH
-// =====================
 
 
-async function login(){
+local playerLogs = {}
 
 
-const email =
-document.getElementById("email").value;
 
+-- PLAYER JOIN
 
-const password =
-document.getElementById("password").value;
+Players.PlayerAdded:Connect(function(player)
 
 
+	local joinTime =
+	os.date("!%Y-%m-%dT%H:%M:%SZ")
 
-const response =
-await fetch(
 
-`${SUPABASE_URL}/auth/v1/token?grant_type=password`,
 
-{
+	local data = {
 
-method:"POST",
 
-headers:{
+		displayname = player.DisplayName,
 
-"apikey":SUPABASE_KEY,
 
-"Content-Type":"application/json"
+		username = player.Name,
 
-},
 
+		userid = player.UserId,
 
-body:JSON.stringify({
 
-email:email,
+		join_time = joinTime
 
-password:password
 
-})
+	}
 
 
-}
 
-);
+	local response =
+	HttpService:RequestAsync({
 
+		Url = SUPABASE_URL,
 
 
-const data =
-await response.json();
+		Method = "POST",
 
 
+		Headers = {
 
-if(data.access_token){
+			["apikey"] = SUPABASE_KEY,
 
 
-localStorage.setItem(
-"token",
-data.access_token
-);
+			["Authorization"] =
+			"Bearer "..SUPABASE_KEY,
 
 
+			["Content-Type"] =
+			"application/json",
 
-window.location.href=
-"dashboard.html";
 
+			["Prefer"] =
+			"return=representation"
 
-}
+		},
 
-else{
 
+		Body =
+		HttpService:JSONEncode(data)
 
-document.getElementById("message")
-.innerHTML =
-"Login gagal";
+	})
 
 
-console.log(data);
 
+	if response.Success then
 
-}
 
+		local result =
+		HttpService:JSONDecode(response.Body)
 
 
-}
 
+		playerLogs[player.UserId] = result[1].id
 
 
 
-// =====================
-// CEK LOGIN
-// =====================
+		print(
+		"Player masuk:",
+		player.Name
+		)
 
-function checkLogin(){
 
+	end
 
-if(!localStorage.getItem("token")){
 
+end)
 
-window.location.href="index.html";
 
 
-}
 
+-- PLAYER LEAVE
 
-}
+Players.PlayerRemoving:Connect(function(player)
 
 
+	local logID =
+	playerLogs[player.UserId]
 
 
-// =====================
-// LOGOUT
-// =====================
 
+	if logID then
 
-function logout(){
 
 
-localStorage.removeItem("token");
+		local leaveTime =
+		os.date("!%Y-%m-%dT%H:%M:%SZ")
 
 
-window.location.href="index.html";
 
+		HttpService:RequestAsync({
 
-}
 
+			Url =
+			SUPABASE_URL
+			.."?id=eq."
+			..logID,
 
 
 
-// =====================
-// LOAD ROBLOX LOG
-// =====================
+			Method = "PATCH",
 
 
-async function loadLogs(){
 
+			Headers = {
 
-const token =
-localStorage.getItem("token");
 
+				["apikey"] =
+				SUPABASE_KEY,
 
 
-const response =
-await fetch(
+				["Authorization"] =
+				"Bearer "..SUPABASE_KEY,
 
-`${SUPABASE_URL}/rest/v1/player_logs?select=*&order=id.desc`,
 
-{
+				["Content-Type"] =
+				"application/json"
 
-headers:{
+			},
 
-"apikey":SUPABASE_KEY,
 
-"Authorization":
-`Bearer ${token}`
 
-}
+			Body =
+			HttpService:JSONEncode({
 
-}
+				leave_time =
+				leaveTime
 
-);
+			})
 
+		})
 
 
-const logs =
-await response.json();
 
+		print(
+		"Player keluar:",
+		player.Name
+		)
 
 
-const table =
-document.getElementById("logTable");
+	end
 
 
-if(!table) return;
-
-
-
-table.innerHTML="";
-
-
-
-logs.forEach(log=>{
-
-
-table.innerHTML += `
-
-<tr>
-
-<td>${log.id}</td>
-
-<td>${log.username}</td>
-
-<td>${log.userid}</td>
-
-<td>${log.event}</td>
-
-<td>${log.time}</td>
-
-</tr>
-
-`;
-
-});
-
-
-}
+end)
