@@ -1,61 +1,16 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<title>Roblox Dashboard</title>
-<link rel="stylesheet" href="style.css">
-</head>
-
-
-<body>
-
-
-<h1>
-Roblox Player Logs
-</h1>
-
-
-<button onclick="logout()">
-Logout
-</button>
-
-
 <table border="1">
-
-<thead>
 
 <tr>
 <th>ID</th>
 <th>Username</th>
 <th>User ID</th>
 <th>Event</th>
-<th>Time</th>
+<th>Join Time</th>
+<th>Leave Time</th>
 </tr>
-
-</thead>
-
 
 <tbody id="logTable">
 
 </tbody>
 
-
 </table>
-
-
-<script src="script.js"></script>
-
-<script>
-
-checkLogin();
-
-loadLogs();
-
-setInterval(loadLogs,5000);
-
-</script>
-
-
-</body>
-
-</html>
