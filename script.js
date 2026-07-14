@@ -91,6 +91,145 @@ alert("Login gagal");
 
 async function loadDashboard(){
 
+function showTable(){
+
+
+let start =
+(currentPage - 1) * perPage;
+
+
+let end =
+start + perPage;
+
+
+let pageData =
+playersData.slice(start,end);
+
+
+
+let html="";
+
+
+pageData.forEach(player=>{
+
+
+html += `
+
+<tr>
+
+<td>
+${player.username}
+</td>
+
+<td>
+${player.userid}
+</td>
+
+<td>
+${player.join_time}
+</td>
+
+<td>
+${player.leave_time ?? "Online"}
+</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById("table")
+.innerHTML = html;
+
+
+
+document.getElementById("page")
+.innerHTML =
+currentPage;
+
+
+}
+
+function nextPage(){
+
+
+if(
+currentPage * perPage < playersData.length
+){
+
+currentPage++;
+
+showTable();
+
+}
+
+
+}
+
+
+
+function previousPage(){
+
+
+if(currentPage > 1){
+
+currentPage--;
+
+showTable();
+
+}
+
+
+}
+
+function searchPlayer(){
+
+
+let keyword =
+document
+.getElementById("search")
+.value
+.toLowerCase();
+
+
+
+let result =
+playersData.filter(player=>
+
+
+player.username
+.toLowerCase()
+.includes(keyword)
+
+||
+
+String(player.userid)
+.includes(keyword)
+
+
+);
+
+
+
+let backup =
+playersData;
+
+
+playersData = result;
+
+currentPage = 1;
+
+
+showTable();
+
+
+playersData = backup;
+
+
+}
 
 let token =
 localStorage.getItem("token");
@@ -204,47 +343,9 @@ data.length;
 // TABLE
 //
 
-let html="";
+playersData = data;
 
-
-data.forEach(player=>{
-
-
-html += `
-
-<tr>
-
-<td>
-${player.username}
-</td>
-
-
-<td>
-${player.userid}
-</td>
-
-
-<td>
-${player.join_time}
-</td>
-
-
-<td>
-${player.leave_time ?? "Online"}
-</td>
-
-
-</tr>
-
-`;
-
-});
-
-
-
-document.getElementById("table")
-.innerHTML =
-html;
+showTable();
 
 
 }
