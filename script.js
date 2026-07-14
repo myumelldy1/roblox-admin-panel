@@ -199,17 +199,18 @@ table.innerHTML += `
 
 <td>${log.id}</td>
 
+<td>${log.displayname}</td>
+
 <td>${log.username}</td>
 
-<td>${log.userid}</td>
+<td>${log.join_time ?? "-"}</td>
 
-<td>${log.event}</td>
-
-<td>${log.time}</td>
+<td>${log.leave_time ?? "-"}</td>
 
 </tr>
 
 `;
+
 
 });
 
