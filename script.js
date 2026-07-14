@@ -1,9 +1,9 @@
 const SUPABASE_URL =
-"https://PROJECTID.supabase.co";
+"https://ygwkmanjkiuachkmhkbh.supabase.co";
 
 
 const SUPABASE_KEY =
-"ANON_PUBLIC_KEY";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
 
 
 
