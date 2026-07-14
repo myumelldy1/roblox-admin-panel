@@ -4,65 +4,10 @@
 <head>
 
 <title>
-Roblox Admin Dashboard
+Roblox Dashboard
 </title>
 
-
-<style>
-
-body{
-font-family:Arial;
-background:#111;
-color:white;
-padding:20px;
-}
-
-
-.cards{
-
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-
-}
-
-
-.card{
-
-background:#222;
-padding:20px;
-border-radius:10px;
-width:200px;
-text-align:center;
-
-}
-
-
-table{
-
-width:100%;
-margin-top:30px;
-border-collapse:collapse;
-
-}
-
-
-td,th{
-
-border:1px solid #555;
-padding:10px;
-
-}
-
-
-button{
-
-padding:10px;
-
-}
-
-</style>
-
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -71,7 +16,7 @@ padding:10px;
 
 
 <h1>
-Roblox Admin Dashboard
+Roblox Player Logs
 </h1>
 
 
@@ -79,135 +24,33 @@ Roblox Admin Dashboard
 Logout
 </button>
 
-<div>
 
-<input 
-id="search"
-placeholder="Cari username / UserId"
-onkeyup="searchPlayer()"
->
-
-</div>
-
-
-<div>
-
-<button onclick="previousPage()">
-Previous
-</button>
-
-
-<span id="page">
-1
+<h3>
+Total Log:
+<span id="totalPlayer">
+0
 </span>
-
-
-<button onclick="nextPage()">
-Next
-</button>
-
-</div>
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>
-Total Player
 </h3>
 
-<h2 id="total">
-0
-</h2>
 
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Join Hari Ini
-</h3>
-
-<h2 id="today">
-0
-</h2>
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Player Online
-</h3>
-
-<h2 id="online">
-0
-</h2>
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Total Sesi
-</h3>
-
-<h2 id="session">
-0
-</h2>
-
-</div>
-
-
-</div>
-
-
-
-
-<h2>
-Player Log
-</h2>
-
-
-<table>
-
+<table border="1">
 
 <thead>
 
 <tr>
 
-<th>
-Username
-</th>
-
-<th>
-UserId
-</th>
-
-<th>
-Join
-</th>
-
-<th>
-Leave
-</th>
-
+<th>ID</th>
+<th>Username</th>
+<th>User ID</th>
+<th>Event</th>
+<th>Time</th>
 
 </tr>
 
 </thead>
 
 
-
-<tbody id="table">
-
+<tbody id="logTable">
 
 </tbody>
 
@@ -219,7 +62,18 @@ Leave
 <script src="script.js"></script>
 
 
-</body>
+<script>
 
+checkLogin();
+
+loadLogs();
+
+setInterval(loadLogs,5000);
+
+
+</script>
+
+
+</body>
 
 </html>
