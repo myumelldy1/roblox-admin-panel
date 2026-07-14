@@ -8,35 +8,48 @@ const SUPABASE_KEY =
 
 
 // =====================
-// LOGIN
+// LOGIN SUPABASE AUTH
 // =====================
+
 
 async function login(){
 
 
-let username =
-document.getElementById("username").value;
+const email =
+document.getElementById("email").value;
 
 
-let password =
+const password =
 document.getElementById("password").value;
 
 
 
-let response = await fetch(
+const response =
+await fetch(
 
-`${SUPABASE_URL}/rest/v1/admins?username=eq.${username}`,
+`${SUPABASE_URL}/auth/v1/token?grant_type=password`,
 
 {
+
+method:"POST",
 
 headers:{
 
 "apikey":SUPABASE_KEY,
 
-"Authorization":
-`Bearer ${SUPABASE_KEY}`
+"Content-Type":"application/json"
 
-}
+},
+
+
+body:JSON.stringify({
+
+email:email,
+
+password:password
+
+})
+
 
 }
 
@@ -44,29 +57,19 @@ headers:{
 
 
 
-let data =
+const data =
 await response.json();
 
 
 
-if(data.length === 0){
-
-document.getElementById("message")
-.innerHTML="Admin tidak ditemukan";
-
-return;
-
-}
-
-
-
-if(data[0].password == password){
+if(data.access_token){
 
 
 localStorage.setItem(
-"admin",
-username
+"token",
+data.access_token
 );
+
 
 
 window.location.href=
@@ -79,7 +82,11 @@ else{
 
 
 document.getElementById("message")
-.innerHTML="Password salah";
+.innerHTML =
+"Login gagal";
+
+
+console.log(data);
 
 
 }
@@ -87,6 +94,7 @@ document.getElementById("message")
 
 
 }
+
 
 
 
@@ -94,11 +102,10 @@ document.getElementById("message")
 // CEK LOGIN
 // =====================
 
-
 function checkLogin(){
 
 
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("token")){
 
 
 window.location.href="index.html";
@@ -108,6 +115,7 @@ window.location.href="index.html";
 
 
 }
+
 
 
 
@@ -119,7 +127,7 @@ window.location.href="index.html";
 function logout(){
 
 
-localStorage.removeItem("admin");
+localStorage.removeItem("token");
 
 
 window.location.href="index.html";
@@ -131,14 +139,19 @@ window.location.href="index.html";
 
 
 // =====================
-// AMBIL LOG ROBLOX
+// LOAD ROBLOX LOG
 // =====================
 
 
 async function loadLogs(){
 
 
-let response =
+const token =
+localStorage.getItem("token");
+
+
+
+const response =
 await fetch(
 
 `${SUPABASE_URL}/rest/v1/player_logs?select=*&order=id.desc`,
@@ -150,7 +163,7 @@ headers:{
 "apikey":SUPABASE_KEY,
 
 "Authorization":
-`Bearer ${SUPABASE_KEY}`
+`Bearer ${token}`
 
 }
 
@@ -160,14 +173,13 @@ headers:{
 
 
 
-let logs =
+const logs =
 await response.json();
 
 
 
-let table =
+const table =
 document.getElementById("logTable");
-
 
 
 if(!table) return;
@@ -199,22 +211,7 @@ table.innerHTML += `
 
 `;
 
-
 });
-
-
-
-let counter =
-document.getElementById("totalPlayer");
-
-
-if(counter){
-
-counter.innerHTML =
-logs.length;
-
-}
-
 
 
 }
