@@ -5,7 +5,7 @@ let currentPage = 1;
 let perPage = 50;
 
 const SUPABASE_URL =
-"https://ygwkmanjkiuachkmhkbh.supabase.co";
+"https://ygwkmanjkiuachkmhkbh.supabase.co/rest/v1/player_logs";
 
 
 const SUPABASE_KEY =
