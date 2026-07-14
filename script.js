@@ -76,48 +76,70 @@ async function loadLogs() {
 
 async function login(){
 
-    let username =
-    document.getElementById("username").value;
-
-    let password =
-    document.getElementById("password").value;
+let email =
+document.getElementById("email").value;
 
 
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/admins?username=eq.${username}`,
-        {
-            headers:{
-                "apikey": SUPABASE_KEY,
-                "Authorization":
-                `Bearer ${SUPABASE_KEY}`
-            }
-        }
-    );
+let password =
+document.getElementById("password").value;
 
 
-    const data = await response.json();
+let response =
+await fetch(
+
+SUPABASE_URL+
+"/auth/v1/token?grant_type=password",
+
+{
+
+method:"POST",
+
+headers:{
+
+apikey:SUPABASE_KEY,
+
+"Content-Type":
+"application/json"
+
+},
+
+body:JSON.stringify({
+
+email:email,
+
+password:password
+
+})
+
+}
+
+);
 
 
-    if(data.length === 0){
-        alert("Admin tidak ditemukan");
-        return;
-    }
+let data =
+await response.json();
 
 
-    if(data[0].password === password){
 
-        localStorage.setItem(
-            "admin",
-            username
-        );
+if(data.access_token){
 
-        window.location.href="dashboard.html";
+localStorage.setItem(
+"token",
+data.access_token
+);
 
-    }else{
 
-        alert("Password salah");
+window.location.href =
+"dashboard.html";
 
-    }
+
+}
+
+else{
+
+alert("Login gagal");
+
+}
 
 }
 
