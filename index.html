@@ -1,41 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
 
-<title>Roblox Admin Panel</title>
+<head>
+<title>Admin Login</title>
 
 <style>
 
 body{
-font-family:Arial;
 background:#111;
 color:white;
-padding:20px;
+font-family:Arial;
+text-align:center;
+padding-top:100px;
 }
 
-h1{
-text-align:center;
-}
 
 input,button{
-padding:10px;
+
+padding:12px;
 margin:5px;
-}
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-}
-
-td,th{
-border:1px solid #555;
-padding:8px;
-text-align:center;
-}
-
-th{
-background:#333;
 }
 
 </style>
@@ -47,149 +31,35 @@ background:#333;
 
 
 <h1>
-Roblox Player Log
+Roblox Admin Panel
 </h1>
 
 
-<input id="search" placeholder="Cari username">
+<h3>
+Login Admin
+</h3>
 
 
-<button onclick="loadData()">
-Refresh
+<input id="email" placeholder="Email">
+
+<br>
+
+<input id="password" 
+type="password"
+placeholder="Password">
+
+<br>
+
+
+<button onclick="login()">
+Login
 </button>
 
 
-<table>
 
-<thead>
-
-<tr>
-
-<th>ID</th>
-<th>Display Name</th>
-<th>Username</th>
-<th>User ID</th>
-<th>Join Time</th>
-<th>Leave Time</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="data">
-
-</tbody>
-
-
-</table>
-
-
-
-<script>
-
-
-const URL =
-"https://ygwkmanjkiuachkmhkbh.supabase.co";
-
-
-const KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlnd2ttYW5qa2l1YWNoa21oa2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjgxNDIsImV4cCI6MjA5OTU0NDE0Mn0.bE15mcFyl6ZDRXc8Xpu_oh5Aetd_CmAdLNm8qUryQhw";
-
-
-
-async function loadData(){
-
-
-let result =
-await fetch(
-
-URL+
-"/rest/v1/player_logs?select=*&order=id.desc",
-
-{
-
-headers:{
-
-apikey:KEY,
-
-Authorization:
-"Bearer "+KEY
-
-}
-
-}
-
-);
-
-
-
-let players =
-await result.json();
-
-
-
-let search =
-document
-.getElementById("search")
-.value
-.toLowerCase();
-
-
-
-let html="";
-
-
-
-players.forEach(p=>{
-
-
-if(
-p.username
-.toLowerCase()
-.includes(search)
-){
-
-
-html+=`
-
-<tr>
-
-<td>${p.id}</td>
-
-<td>${p.displayname}</td>
-
-<td>${p.username}</td>
-
-<td>${p.userid}</td>
-
-<td>${p.join_time}</td>
-
-<td>${p.leave_time ?? "Online"}</td>
-
-</tr>
-
-`;
-
-
-}
-
-
-});
-
-
-
-document.getElementById("data").innerHTML=html;
-
-
-}
-
-
-loadData();
-
-
-</script>
+<script src="script.js"></script>
 
 
 </body>
+
 </html>
