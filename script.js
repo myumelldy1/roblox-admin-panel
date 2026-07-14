@@ -81,3 +81,107 @@ alert("Login gagal");
 
 
 }
+
+
+async function loadDashboard(){
+
+
+let token =
+localStorage.getItem("token");
+
+
+if(!token){
+
+location.href="login.html";
+
+}
+
+
+
+let res =
+await fetch(
+
+SUPABASE_URL+
+"/rest/v1/player_logs?select=*",
+
+{
+
+headers:{
+
+apikey:SUPABASE_KEY,
+
+Authorization:
+"Bearer "+token
+
+}
+
+}
+
+);
+
+
+
+let data =
+await res.json();
+
+
+
+document.getElementById(
+"total"
+).innerHTML=data.length;
+
+
+
+let html="";
+
+
+data.forEach(p=>{
+
+
+html+=`
+
+<tr>
+
+<td>${p.username}</td>
+
+<td>${p.userid}</td>
+
+<td>${p.join_time}</td>
+
+<td>${p.leave_time ?? "Online"}</td>
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById(
+"table"
+).innerHTML=html;
+
+
+}
+
+
+
+function logout(){
+
+localStorage.removeItem("token");
+
+location.href="login.html";
+
+}
+
+
+
+if(
+location.pathname.includes(
+"dashboard"
+)
+){
+
+loadDashboard();
+
+}
