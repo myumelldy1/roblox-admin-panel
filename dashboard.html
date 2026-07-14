@@ -1,3 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+Roblox Dashboard
+</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<h1>
+Roblox Player Logs
+</h1>
+
+
+<button onclick="logout()">
+Logout
+</button>
+
+
+<br><br>
+
+
 <table border="1">
 
 <thead>
@@ -25,3 +55,23 @@
 
 
 </table>
+
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+checkLogin();
+
+loadLogs();
+
+setInterval(loadLogs,5000);
+
+</script>
+
+
+</body>
+
+</html>
