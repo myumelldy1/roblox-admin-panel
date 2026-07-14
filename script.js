@@ -176,7 +176,8 @@ headers:{
 const logs =
 await response.json();
 
-console.log("LOG DARI SUPABASE:", logs);
+console.log("STATUS:", response.status);
+console.log("DATA LOG:", logs);
 
 
 
