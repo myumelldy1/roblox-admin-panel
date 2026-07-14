@@ -74,6 +74,54 @@ async function loadLogs() {
 }
 
 
+async function login(){
+
+    let username =
+    document.getElementById("username").value;
+
+    let password =
+    document.getElementById("password").value;
+
+
+    const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/admins?username=eq.${username}`,
+        {
+            headers:{
+                "apikey": SUPABASE_KEY,
+                "Authorization":
+                `Bearer ${SUPABASE_KEY}`
+            }
+        }
+    );
+
+
+    const data = await response.json();
+
+
+    if(data.length === 0){
+        alert("Admin tidak ditemukan");
+        return;
+    }
+
+
+    if(data[0].password === password){
+
+        localStorage.setItem(
+            "admin",
+            username
+        );
+
+        window.location.href="dashboard.html";
+
+    }else{
+
+        alert("Password salah");
+
+    }
+
+}
+
+
 // ===============================
 // DASHBOARD COUNTER
 // ===============================
