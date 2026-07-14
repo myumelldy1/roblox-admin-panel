@@ -15,14 +15,12 @@ const SUPABASE_KEY =
 
 async function login(){
 
-
 let email =
 document.getElementById("email").value;
 
 
 let password =
 document.getElementById("password").value;
-
 
 
 let response =
@@ -37,7 +35,7 @@ method:"POST",
 
 headers:{
 
-"apikey":SUPABASE_KEY,
+apikey:SUPABASE_KEY,
 
 "Content-Type":
 "application/json"
@@ -57,7 +55,6 @@ password:password
 );
 
 
-
 let data =
 await response.json();
 
@@ -65,26 +62,23 @@ await response.json();
 
 if(data.access_token){
 
-
 localStorage.setItem(
 "token",
 data.access_token
 );
 
 
-location.href="dashboard.html";
+window.location.href =
+"dashboard.html";
 
 
 }
 
 else{
 
-
 alert("Login gagal");
 
-
 }
-
 
 }
 
