@@ -1,3 +1,9 @@
+let playersData = [];
+
+let currentPage = 1;
+
+let perPage = 50;
+
 const SUPABASE_URL =
 "https://ygwkmanjkiuachkmhkbh.supabase.co";
 
